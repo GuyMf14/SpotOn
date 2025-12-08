@@ -1,58 +1,132 @@
-import { Button } from './Button';
-import './App.css'
-import { useState, useEffect } from 'react'
-import { HATS } from './config';
-import { getPosts } from './api';
-import { Post } from './Post';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { UserContext } from './contexts/UserContext';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
-  const [hidden, setHidden] = useState(false)
-  const [posts, setPosts] = useState([]);
-  const [[isLoading]]=useState([true]);
+// --- קומפוננטות זמניות (Placeholders) ---
+// בהמשך תעביר כל אחת מהן לקובץ נפרד בתיקיית pages
 
+const HomePage = () => (
+  <div className="page">
+    <h1>🏠 Welcome to SpotOn</h1>
+    <p>Smart Parking Management System</p>
+  </div>
+);
 
-  console.log(posts);
-  console.log("Render");
+const SpotList = () => (
+  <div className="page">
+    <h1>🅿️ Available Parking Spots</h1>
+    <p>List of spots will appear here...</p>
+  </div>
+);
 
+const SpotDetails = () => (
+  <div className="page">
+    <h1>ℹ️ Spot Details</h1>
+    <p>Details about a specific parking spot.</p>
+  </div>
+);
 
-  useEffect(() =>  {
-    getPosts().then(data => setPosts(data));
-  }, []);
-  
+const SpotEdit = () => (
+  <div className="page">
+    <h1>✍️ Edit / Create Spot</h1>
+    <p>Admin form to manage spots.</p>
+  </div>
+);
 
-  const [loading, setLoading] = useState(true);
+const AdminDashboard = () => (
+  <div className="page">
+    <h1>👑 Admin Dashboard</h1>
+    <p>Manage users, revenue, and settings.</p>
+  </div>
+);
 
-  useEffect(() =>  {
-    setLoading(true);
-    getPosts().then(data => {
-      setPosts(data);
-      setLoading(false);
-    });
-  }, []);
+// קומפוננטת התחברות בסיסית לצורך בדיקה
+const LoginPage = () => {
+  const { login } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // סימולציה של התחברות
+    login({ username: 'Guy', role: 'admin', email }); 
+    navigate('/');
+  };
 
   return (
-    
-    <>
-      {!hidden && <h1>Welcome {count}</h1>}
+    <div className="page">
+      <h1>👤 Login</h1>
+      <form onSubmit={handleLogin}>
+        <input 
+          type="text" 
+          placeholder="Enter email..." 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  );
+};
 
-      <button onClick={() => setCount(count + 1)}>Click</button>
+// --- האפליקציה הראשית ---
 
-      <button onClick={() => setHidden(h => !h)}>{hidden ? 'show' : 'hidden'}</button>
+function App() {
+  const { user, logout, isLoading } = useContext(UserContext);
+  const navigate = useNavigate();
 
-      <div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          posts.map((post) => (
-            <div key={post.id}>
-              <Post post={post} />
-            </div>
-          ))
-        )}
-      </div>
-    </>
-  )
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  if (isLoading) return <div className="loading">Loading App...</div>;
+
+  return (
+    <div className="app-container">
+      {/* 1. Navbar / Header - ניווט עליון */}
+      <header className="main-header">
+        <div className="logo">SpotOn 🚗</div>
+        <nav>
+          <Link to="/">Home</Link>
+          <Link to="/spot">Spots</Link>
+          
+          {user && user.role === 'admin' && (
+            <Link to="/admin">Admin</Link>
+          )}
+
+          <div className="auth-section">
+            {user ? (
+              <>
+                <span className="welcome-msg">Hello, {user.username}</span>
+                <button onClick={handleLogout} className="logout-btn">Logout</button>
+              </>
+            ) : (
+              <Link to="/login" className="login-link">Login</Link>
+            )}
+          </div>
+        </nav>
+      </header>
+
+      {/* 2. Main Content - כאן מתחלפים המסכים */}
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/spot" element={<SpotList />} />
+          <Route path="/spot/:id" element={<SpotDetails />} />
+          <Route path="/spot/edit" element={<SpotEdit />} />
+          
+          {/* הגנה על ראוט האדמין */}
+          <Route 
+            path="/admin" 
+            element={user?.role === 'admin' ? <AdminDashboard /> : <HomePage />} 
+          />
+        </Routes>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
