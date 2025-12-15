@@ -1,0 +1,35 @@
+### 1. בדיקת סטטוס בסיסית של ה-Auth API
+# שיטה: GET
+GET http://localhost:3030/api/auth
+
+### 2. הרשמת משתמש חדש (Signup)
+# מטרת הבדיקה: וידוא שה-Service וה-DB עובדים.
+# (אם זה נכשל, יש בעיית bcrypt/DB)
+POST http://localhost:3030/api/auth/signup
+Content-Type: application/json
+
+{
+    "username": "adminTest",
+    "email": "test@spoton.com",
+    "password": "TestPassword123",
+    "role": "admin"
+}
+
+### 3. התחברות (Login)
+# מטרת הבדיקה: וידוא אימות סיסמה ויצירת JWT Cookie.
+# (ה-REST Client ישמור אוטומטית את הקוקי)
+POST http://localhost:3030/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@spoton.com",
+    "password": "TestPassword123"
+}
+
+### 4. בדיקת משתמש מחובר (אימות JWT Middleware)
+# מטרת הבדיקה: וידוא שהשרת קורא את ה-Cookie ומפענח את המשתמש.
+GET http://localhost:3030/api/auth/user
+
+### 5. ניסיון Logout
+# מטרת הבדיקה: וידוא שה-Cookie נמחק.
+POST http://localhost:3030/api/auth/logout
