@@ -1,9 +1,22 @@
-// backend/api/session/session.routes.js
-const express = require('express');
+import express from 'express';
+import { 
+    getAllSessions, 
+    getSessionById, 
+    createSession, 
+    endSession, 
+    updateSession, 
+    deleteSession,
+    markAsPaid
+} from './session.controller.js';
+
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send('Parking Sessions API is running');
-});
+router.get('/', getAllSessions);
+router.get('/:id', getSessionById);
+router.post('/', createSession);
+router.put('/:id/end', endSession);
+router.put('/:id/pay', markAsPaid);
+router.put('/:id', updateSession);
+router.delete('/:id', deleteSession);
 
-module.exports = router;
+export default router;

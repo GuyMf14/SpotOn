@@ -1,8 +1,6 @@
-// backend/models/Rate.model.js
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const rateSchema = new Schema({
+const rateSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -15,10 +13,10 @@ const rateSchema = new Schema({
         type: Boolean,
         default: true
     },
-    min_charge_minutes: { // חיוב מינימלי, לדוגמה 30 דקות
+    min_charge_minutes: {
         type: Number,
         default: 0
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Rate', rateSchema);
+export default mongoose.model('Rate', rateSchema);

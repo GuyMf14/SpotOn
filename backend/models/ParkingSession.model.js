@@ -1,14 +1,12 @@
-// backend/models/ParkingSession.model.js
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const sessionSchema = new Schema({
+const sessionSchema = new mongoose.Schema({
     user_id: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: false // ייתכן וזה אורח
+        required: false
     },
-    license_plate: { // לוחית זיהוי - חובה
+    license_plate: {
         type: String,
         required: true
     },
@@ -22,14 +20,14 @@ const sessionSchema = new Schema({
     },
     exit_time: {
         type: Date,
-        required: false // null כל עוד הרכב חונה
+        required: false
     },
     duration_minutes: {
         type: Number,
         default: 0
     },
-    rate_id: { // קישור לתעריף שבתוקף בזמן החניה
-        type: Schema.Types.ObjectId,
+    rate_id: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Rate',
         required: true
     },
@@ -43,4 +41,4 @@ const sessionSchema = new Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('ParkingSession', sessionSchema);
+export default mongoose.model('ParkingSession', sessionSchema);

@@ -1,31 +1,21 @@
-// backend/models/User.model.js
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const userSchema = new Schema({
-    username: {
+const userSchema = new mongoose.Schema({
+    name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     email: {
         type: String,
         required: true,
         unique: true
     },
-    password: {
-        type: String,
-        required: true
-    },
+    phone: String,
     role: {
         type: String,
-        enum: ['admin', 'driver'], // הרשאות
+        enum: ['admin', 'driver'],
         default: 'driver'
-    },
-    car_plate: {
-        type: String,
-        // זהו רכב ברירת המחדל של המשתמש הרשום
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);
