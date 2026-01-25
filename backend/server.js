@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -38,6 +39,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
 app.use('/api/user', userRoutes);
