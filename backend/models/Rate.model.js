@@ -5,7 +5,7 @@ const rateSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    price_per_hour: {
+    price_per_minute: {
         type: Number,
         required: true
     },

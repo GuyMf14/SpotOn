@@ -190,7 +190,7 @@ function BookParking() {
               <option value="">Select a rate</option>
               {rates.map(rate => (
                 <option key={rate._id} value={rate._id}>
-                  {rate.name} - ₪{rate.price_per_hour}/hr
+                  {rate.name} - ₪{rate.price_per_minute}/min
                 </option>
               ))}
             </select>

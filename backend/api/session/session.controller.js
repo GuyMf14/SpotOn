@@ -86,11 +86,12 @@ export async function endSession(req, res) {
 
         const rate = session.rate_id;
         const charge_minutes = Math.max(duration_minutes, rate.min_charge_minutes);
-        const total_amount = (charge_minutes / 60) * rate.price_per_hour;
+        const total_amount = charge_minutes * rate.price_per_minute;
 
         session.exit_time = exit_time;
         session.duration_minutes = duration_minutes;
         session.total_amount = total_amount;
+        session.is_paid = true;
 
         // Decrement occupancy
         if (session.space_id && session.space_id.current_occupancy > 0) {

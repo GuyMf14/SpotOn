@@ -15,19 +15,19 @@ const seedRates = async () => {
         const rates = [
             {
                 name: 'Standard Rate',
-                price_per_hour: 10,
+                price_per_minute: 1,
                 min_charge_minutes: 60,
                 is_active: true
             },
             {
                 name: 'Premium Rate',
-                price_per_hour: 15,
+                price_per_minute: 2,
                 min_charge_minutes: 60,
                 is_active: true
             },
             {
                 name: 'VIP Rate',
-                price_per_hour: 20,
+                price_per_minute: 3,
                 min_charge_minutes: 120,
                 is_active: true
             }

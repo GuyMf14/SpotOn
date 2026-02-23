@@ -10,24 +10,35 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [userRes, sessionsRes] = await Promise.all([
-          api.get("/user/me"),
-          api.get("/session/my-sessions")
-        ]);
-        setUser(userRes.data);
-        setSessions(sessionsRes.data);
-      } catch (err) {
-        console.log("Error:", err.response?.status, err.response?.data);
-        setError("שגיאה בטעינת הפרופיל");
-      } finally {
-        setLoading(false);
-      }
+  const fetchData = async () => {
+    try {
+      const [userRes, sessionsRes] = await Promise.all([
+        api.get("/user/me"),
+        api.get("/session/my-sessions")
+      ]);
+      setUser(userRes.data);
+      setSessions(sessionsRes.data);
+    } catch (err) {
+      console.log("Error:", err.response?.status, err.response?.data);
+      setError("שגיאה בטעינת הפרופיל");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
+
+  const handleEndSession = async (sessionId) => {
+    try {
+      await api.put(`/session/${sessionId}/end`);
+      fetchData(); // Refresh the data to show updated status and amount
+    } catch (err) {
+      console.error("Failed to end session:", err);
+      alert(err.response?.data?.error || "Failed to end session");
+    }
+  };
 
   async function handleLogout() {
     try {
@@ -98,9 +109,24 @@ function Profile() {
                     {new Date(session.entry_time).toLocaleDateString("he-IL")}
                   </div>
                 </div>
-                <span className={`booking-history-status ${!session.exit_time ? "active" : "completed"}`}>
-                  {!session.exit_time ? "פעיל" : "הושלם"}
-                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                  <span className={`booking-history-status ${!session.exit_time ? "active" : "completed"}`}>
+                    {!session.exit_time ? "פעיל" : "שולם"}
+                  </span>
+                  {!session.exit_time ? (
+                    <button
+                      className="btn-primary"
+                      style={{ padding: '6px 12px', fontSize: '0.875rem' }}
+                      onClick={() => handleEndSession(session._id)}
+                    >
+                      סיים חניה
+                    </button>
+                  ) : (
+                    <span style={{ fontWeight: 'bold' }}>
+                      ₪{session.total_amount ? session.total_amount.toFixed(2) : "0.00"}
+                    </span>
+                  )}
+                </div>
               </div>
             ))
           )}
