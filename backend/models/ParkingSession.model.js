@@ -10,8 +10,9 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    spot_number: {
-        type: String,
+    space_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Space',
         required: true
     },
     entry_time: {

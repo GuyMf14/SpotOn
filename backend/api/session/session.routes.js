@@ -1,16 +1,19 @@
 import express from 'express';
-import { 
-    getAllSessions, 
-    getSessionById, 
-    createSession, 
-    endSession, 
-    updateSession, 
+import {
+    getAllSessions,
+    getSessionById,
+    createSession,
+    endSession,
+    updateSession,
     deleteSession,
-    markAsPaid
+    markAsPaid,
+    getMySessions
 } from './session.controller.js';
+import { verifyToken } from '../../middleware/auth.js';
 
 const router = express.Router();
 
+router.get('/my-sessions', verifyToken, getMySessions);
 router.get('/', getAllSessions);
 router.get('/:id', getSessionById);
 router.post('/', createSession);

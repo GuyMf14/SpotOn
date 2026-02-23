@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../services/api";
 import "../styles/global.css";
 
@@ -9,33 +10,20 @@ function Login() {
 
   const handleLogin = async () => {
     setError("");
-
-    const DEMO_EMAIL = "test@test.com";
-    const DEMO_PASS = "123456";
-
-    // בדיקה קבועה מראש – עובד גם בלי שרת
-    if (email === DEMO_EMAIL && password === DEMO_PASS) {
-      localStorage.setItem("token", "demo-offline-token");
-      window.location.href = "/";
-      return;
-    }
-
-    // ניסיון להתחבר ל-API אמיתי
     try {
-      const res = await api.post("/auth/login", { email, password });
-      localStorage.setItem("token", res.data.token);
+      await api.post("/user/login", { email, password });
       window.location.href = "/";
     } catch (err) {
-      setError("כניסה נכשלה. להדגמה השתמש ב: test@test.com / 123456");
+      setError("כניסה נכשלה. בדוק אימייל וסיסמה");
     }
   };
 
+
   return (
     <div className="auth-container">
-      <div className="card auth-card">
+      <div className="auth-card">
         <h1>SpotOn</h1>
         <p>ניהול חנייה חכם</p>
-
         <input
           className="input"
           type="email"
@@ -50,14 +38,15 @@ function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        {error && <p style={{ color: "var(--danger)", margin: "10px 0" }}>{error}</p>}
-
-        <button className="btn-primary" style={{ width: "100%" }} onClick={handleLogin}>
+        {error && <p className="error-message">{error}</p>}
+        <button className="btn-primary" onClick={handleLogin}>
           כניסה
         </button>
-
-        <div style={{ marginTop: "20px", color: "var(--text-light)", fontSize: "0.9rem" }}>
+        <div>
+          <span>אין לך חשבון? </span>
+          <Link to="/register">הירשם</Link>
+        </div>
+        <div className="demo-info">
           פרטי הדגמה: test@test.com / 123456
         </div>
       </div>

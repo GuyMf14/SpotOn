@@ -1,9 +1,8 @@
-export  async function getPosts() {
-        await new Promise((resolve) => setTimeout(resolve, 6000));
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-    const data = await response.json();
-   
-    return data;
-//return (await fetch('https://jsonplaceholder.typicode.com/posts')).json();
+import axios from "axios";
 
-}
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+    withCredentials: true
+});
+
+export default api;

@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import userRoutes from './api/user/user.routes.js';
 import sessionRoutes from './api/session/session.routes.js';
 import rateRoutes from './api/rate/rate.routes.js';
+import spaceRoutes from './api/space/space.routes.js';
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ app.use(cookieParser());
 app.use('/api/user', userRoutes);
 app.use('/api/session', sessionRoutes);
 app.use('/api/rate', rateRoutes);
+app.use('/api/space', spaceRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
