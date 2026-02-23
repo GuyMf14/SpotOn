@@ -15,7 +15,7 @@ function Profile() {
       try {
         const [userRes, sessionsRes] = await Promise.all([
           api.get("/user/me"),
-          api.get("/session")
+          api.get("/session/my-sessions")
         ]);
         setUser(userRes.data);
         setSessions(sessionsRes.data);
@@ -44,8 +44,8 @@ function Profile() {
   if (error) return <div className="profile"><div className="card">{error}</div></div>;
   if (!user) return null;
 
-  const activeSessions = sessions.filter(s => !s.endTime);
-  const completedSessions = sessions.filter(s => s.endTime);
+  const activeSessions = sessions.filter(s => !s.exit_time);
+  const completedSessions = sessions.filter(s => s.exit_time);
 
   return (
     <div className="profile">
@@ -93,13 +93,13 @@ function Profile() {
             sessions.map(session => (
               <div key={session._id} className="booking-history-item">
                 <div>
-                  <div className="booking-history-spot">מקום {session.spotNumber}</div>
+                  <div className="booking-history-spot">{session.space_id ? session.space_id.name : "N/A"}</div>
                   <div className="booking-history-date">
-                    {new Date(session.startTime).toLocaleDateString("he-IL")}
+                    {new Date(session.entry_time).toLocaleDateString("he-IL")}
                   </div>
                 </div>
-                <span className={`booking-history-status ${!session.endTime ? "active" : "completed"}`}>
-                  {!session.endTime ? "פעיל" : "הושלם"}
+                <span className={`booking-history-status ${!session.exit_time ? "active" : "completed"}`}>
+                  {!session.exit_time ? "פעיל" : "הושלם"}
                 </span>
               </div>
             ))

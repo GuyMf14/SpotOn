@@ -179,8 +179,7 @@ function BookParking() {
             />
           </div>
 
-          <div className="form-group" style={{ display: 'none' }}>
-            {/* Hidden, assuming a default rate is chosen, or could be exposed if multiple rates exist */}
+          <div className="form-group">
             <label className="form-label">Rate Type</label>
             <select
               className="input"
@@ -188,6 +187,7 @@ function BookParking() {
               onChange={(e) => setSelectedRate(e.target.value)}
               required
             >
+              <option value="">Select a rate</option>
               {rates.map(rate => (
                 <option key={rate._id} value={rate._id}>
                   {rate.name} - ₪{rate.price_per_hour}/hr
